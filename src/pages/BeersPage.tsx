@@ -12,7 +12,7 @@ const BeersPage: React.FC = () => {
   const [editingBeer, setEditingBeer] = useState<Beer | null>(null);
   const [formData, setFormData] = useState({
     name: '',
-    type: '캔맥주' as const,
+    type: '캔' as const,
     volume: '',
     alcohol_percentage: ''
   });
@@ -198,9 +198,9 @@ const BeersPage: React.FC = () => {
                   onChange={(e) => setFormData({ ...formData, type: e.target.value as any })}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                 >
-                  <option value="캔맥주">캔맥주</option>
-                  <option value="병맥주">병맥주</option>
-                  <option value="생맥주">생맥주</option>
+                  <option value="캔">캔</option>
+                  <option value="생">생</option>
+                  <option value="병">병</option>
                   <option value="기타">기타</option>
                 </select>
               </div>
