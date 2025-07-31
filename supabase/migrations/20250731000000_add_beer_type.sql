@@ -1,0 +1,1 @@
+ALTER TABLE public.beers ADD COLUMN type TEXT NOT NULL DEFAULT '캔';

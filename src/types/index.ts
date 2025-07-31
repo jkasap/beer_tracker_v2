@@ -7,6 +7,7 @@ export interface User {
 export interface Beer {
   id: string;
   name: string;
+  type: '캔' | '병' | '생맥주' | '기타';
   volume: number;
   alcohol_percentage: number;
   sort_order: number;

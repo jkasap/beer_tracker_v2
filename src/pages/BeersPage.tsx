@@ -12,6 +12,7 @@ const BeersPage: React.FC = () => {
   const [editingBeer, setEditingBeer] = useState<Beer | null>(null);
   const [formData, setFormData] = useState({
     name: '',
+    type: '캔' as const,
     volume: '',
     alcohol_percentage: ''
   });
@@ -46,6 +47,7 @@ const BeersPage: React.FC = () => {
     try {
       const beerData = {
         name: formData.name,
+        type: formData.type,
         volume: parseFloat(formData.volume),
         alcohol_percentage: parseFloat(formData.alcohol_percentage),
         user_id: user!.id,
@@ -67,7 +69,7 @@ const BeersPage: React.FC = () => {
         if (error) throw error;
       }
 
-      setFormData({ name: '', volume: '', alcohol_percentage: '' });
+      setFormData({ name: '', type: '캔', volume: '', alcohol_percentage: '' });
       setShowForm(false);
       setEditingBeer(null);
       loadBeers();
@@ -80,6 +82,7 @@ const BeersPage: React.FC = () => {
     setEditingBeer(beer);
     setFormData({
       name: beer.name,
+      type: beer.type,
       volume: beer.volume.toString(),
       alcohol_percentage: beer.alcohol_percentage.toString()
     });
@@ -105,7 +108,7 @@ const BeersPage: React.FC = () => {
   const cancelForm = () => {
     setShowForm(false);
     setEditingBeer(null);
-    setFormData({ name: '', volume: '', alcohol_percentage: '' });
+    setFormData({ name: '', type: '캔', volume: '', alcohol_percentage: '' });
   };
 
   const moveBeer = async (index: number, direction: 'up' | 'down') => {
@@ -188,6 +191,22 @@ const BeersPage: React.FC = () => {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
+                  종류
+                </label>
+                <select
+                  value={formData.type}
+                  onChange={(e) => setFormData({ ...formData, type: e.target.value as any })}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                >
+                  <option value="캔">캔</option>
+                  <option value="병">병</option>
+                  <option value="생맥주">생맥주</option>
+                  <option value="기타">기타</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
                   용량 (ml)
                 </label>
                 <input
@@ -200,21 +219,21 @@ const BeersPage: React.FC = () => {
                   required
                 />
               </div>
+            </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  알코올 도수 (%)
-                </label>
-                <input
-                  type="number"
-                  step="0.1"
-                  value={formData.alcohol_percentage}
-                  onChange={(e) => setFormData({ ...formData, alcohol_percentage: e.target.value })}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                  placeholder="5.0"
-                  required
-                />
-              </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                알코올 도수 (%)
+              </label>
+              <input
+                type="number"
+                step="0.1"
+                value={formData.alcohol_percentage}
+                onChange={(e) => setFormData({ ...formData, alcohol_percentage: e.target.value })}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                placeholder="5.0"
+                required
+              />
             </div>
 
             <div className="flex space-x-3">
@@ -267,7 +286,7 @@ const BeersPage: React.FC = () => {
                 <div className="flex-1">
                   <h3 className="font-semibold text-gray-900">{beer.name}</h3>
                   <p className="text-sm text-gray-600">
-                    {beer.volume}ml · {beer.alcohol_percentage}%
+                    {beer.type} · {beer.volume}ml · {beer.alcohol_percentage}%
                   </p>
                 </div>
 
