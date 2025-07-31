@@ -29,8 +29,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 to-orange-100">
-      <header className="bg-gradient-to-r from-amber-600 to-orange-600 text-white p-4 shadow-lg">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+      <header className="bg-gradient-to-r from-primary-dark to-secondary-dark text-white p-4 shadow-lg">
         <div className="flex justify-between items-center">
           <h1 className="text-xl font-bold">🍺 맥주 트래커</h1>
           <button
@@ -56,8 +56,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 onClick={() => navigate(path)}
                 className={`flex flex-col items-center py-2 px-4 rounded-lg transition-colors ${
                   isActive
-                    ? 'text-amber-600 bg-amber-50'
-                    : 'text-gray-600 hover:text-amber-600 hover:bg-amber-50'
+                    ? 'text-primary-dark bg-blue-50'
+                    : 'text-gray-600 hover:text-primary-dark hover:bg-blue-50'
                 }`}
               >
                 <Icon size={20} />

@@ -1,3 +1,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-primary-light text-gray-800;
+  }
+  .bg-gradient-primary {
+    @apply bg-gradient-to-br from-primary-dark via-primary to-primary-light;
+  }
+  .btn-primary {
+    @apply bg-primary text-white font-bold py-2 px-4 rounded hover:bg-primary-dark;
+  }
+  .btn-secondary {
+    @apply bg-secondary text-white font-bold py-2 px-4 rounded hover:bg-secondary-dark;
+  }
+  .text-accent {
+    @apply text-accent;
+  }
+}

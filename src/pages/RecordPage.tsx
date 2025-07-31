@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, Save, Trash2 } from 'lucide-react';
+import { CalendarDays, Save, Trash2 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { Beer, ConsumptionRecord } from '../types';
@@ -153,9 +153,9 @@ const RecordPage: React.FC = () => {
               type="date"
               value={selectedDate}
               onChange={(e) => setSelectedDate(e.target.value)}
-              className="w-full px-4 py-3 pl-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+              className="w-full px-4 py-3 pl-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
             />
-            <Calendar className="absolute left-4 top-3.5 w-5 h-5 text-gray-400" />
+            <CalendarDays className="absolute left-4 top-3.5 w-5 h-5 text-gray-400" />
           </div>
         </div>
       </div>
@@ -185,7 +185,7 @@ const RecordPage: React.FC = () => {
                       step="0.5"
                       value={records[beer.id] || ''}
                       onChange={(e) => handleQuantityChange(beer.id, e.target.value)}
-                      className="w-20 px-3 py-2 border border-gray-300 rounded-lg text-center focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                      className="w-20 px-3 py-2 border border-gray-300 rounded-lg text-center focus:ring-2 focus:ring-primary focus:border-transparent"
                       placeholder="0"
                     />
                   </div>
@@ -195,13 +195,13 @@ const RecordPage: React.FC = () => {
           </div>
 
           {getTotalQuantity() > 0 && (
-            <div className="bg-amber-50 rounded-xl p-4 border border-amber-200">
-              <h4 className="font-semibold text-amber-900 mb-2">오늘의 총합</h4>
+            <div className="bg-primary-light/20 rounded-xl p-4 border border-primary-light">
+              <h4 className="font-semibold text-primary-dark mb-2">오늘의 총합</h4>
               <div className="space-y-1 text-sm">
-                <p className="text-amber-800">
+                <p className="text-primary-dark">
                   총 {getTotalQuantity()}잔
                 </p>
-                <p className="text-amber-800">
+                <p className="text-primary-dark">
                   순알코올 약 {Math.round(getTotalAlcohol() * 100) / 100}ml
                 </p>
               </div>
@@ -211,7 +211,7 @@ const RecordPage: React.FC = () => {
           <button
             onClick={handleSave}
             disabled={saving}
-            className="w-full bg-gradient-to-r from-amber-600 to-orange-600 text-white py-4 px-4 rounded-xl font-semibold hover:from-amber-700 hover:to-orange-700 focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-gradient-to-r from-primary to-secondary text-white py-4 px-4 rounded-xl font-semibold hover:from-primary-dark hover:to-secondary-dark focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Save size={20} className="inline mr-2" />
             {saving ? '저장 중...' : '기록 저장'}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Edit2, Trash2, GripVertical, Save, X } from 'lucide-react';
+import { Plus, Edit2, Trash2, Save, X, ArrowUp, ArrowDown } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { Beer } from '../types';
@@ -108,6 +108,27 @@ const BeersPage: React.FC = () => {
     setFormData({ name: '', volume: '', alcohol_percentage: '' });
   };
 
+  const moveBeer = async (index: number, direction: 'up' | 'down') => {
+    const newBeers = [...beers];
+    const targetIndex = direction === 'up' ? index - 1 : index + 1;
+
+    if (targetIndex < 0 || targetIndex >= beers.length) return;
+
+    [newBeers[index], newBeers[targetIndex]] = [newBeers[targetIndex], newBeers[index]];
+
+    const updates = newBeers.map((beer, i) => 
+      supabase.from('beers').update({ sort_order: i }).eq('id', beer.id)
+    );
+
+    try {
+      await Promise.all(updates);
+      setBeers(newBeers);
+    } catch (error) {
+      console.error('Error reordering beers:', error);
+      // Optionally revert state on error
+    }
+  };
+
   if (loading) {
     return (
       <div className="p-4">
@@ -128,7 +149,7 @@ const BeersPage: React.FC = () => {
         {!showForm && (
           <button
             onClick={() => setShowForm(true)}
-            className="bg-gradient-to-r from-amber-600 to-orange-600 text-white p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 active:scale-95"
+            className="bg-gradient-to-r from-primary to-secondary text-white p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 active:scale-95"
           >
             <Plus size={20} />
           </button>
@@ -158,7 +179,7 @@ const BeersPage: React.FC = () => {
                 type="text"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                 placeholder="예: 하이네켄"
                 required
               />
@@ -174,7 +195,7 @@ const BeersPage: React.FC = () => {
                   step="0.1"
                   value={formData.volume}
                   onChange={(e) => setFormData({ ...formData, volume: e.target.value })}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                   placeholder="330"
                   required
                 />
@@ -189,7 +210,7 @@ const BeersPage: React.FC = () => {
                   step="0.1"
                   value={formData.alcohol_percentage}
                   onChange={(e) => setFormData({ ...formData, alcohol_percentage: e.target.value })}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                   placeholder="5.0"
                   required
                 />
@@ -199,7 +220,7 @@ const BeersPage: React.FC = () => {
             <div className="flex space-x-3">
               <button
                 type="submit"
-                className="flex-1 bg-gradient-to-r from-amber-600 to-orange-600 text-white py-3 px-4 rounded-lg font-medium hover:from-amber-700 hover:to-orange-700 focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 transition-all"
+                className="flex-1 bg-gradient-to-r from-primary to-secondary text-white py-3 px-4 rounded-lg font-medium hover:from-primary-dark hover:to-secondary-dark focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-all"
               >
                 <Save size={20} className="inline mr-2" />
                 {editingBeer ? '수정' : '추가'}
@@ -219,23 +240,28 @@ const BeersPage: React.FC = () => {
       <div className="space-y-3">
         {beers.length === 0 ? (
           <div className="text-center py-12">
-            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4">
               <Plus size={24} className="text-gray-400" />
             </div>
             <p className="text-gray-500 mb-4">등록된 맥주가 없습니다</p>
             <button
               onClick={() => setShowForm(true)}
-              className="bg-gradient-to-r from-amber-600 to-orange-600 text-white px-6 py-3 rounded-lg font-medium hover:from-amber-700 hover:to-orange-700 transition-all"
+              className="bg-gradient-to-r from-primary to-secondary text-white px-6 py-3 rounded-lg font-medium hover:from-primary-dark hover:to-secondary-dark transition-all"
             >
               첫 맥주 추가하기
             </button>
           </div>
         ) : (
-          beers.map((beer) => (
+          beers.map((beer, index) => (
             <div key={beer.id} className="bg-white rounded-xl p-4 shadow-md">
               <div className="flex items-center space-x-4">
-                <div className="p-2 bg-gray-100 rounded-lg cursor-move">
-                  <GripVertical size={16} className="text-gray-400" />
+                <div className="flex flex-col items-center">
+                  <button onClick={() => moveBeer(index, 'up')} disabled={index === 0} className="p-1 disabled:opacity-30">
+                    <ArrowUp size={16} />
+                  </button>
+                  <button onClick={() => moveBeer(index, 'down')} disabled={index === beers.length - 1} className="p-1 disabled:opacity-30">
+                    <ArrowDown size={16} />
+                  </button>
                 </div>
                 
                 <div className="flex-1">

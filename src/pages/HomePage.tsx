@@ -27,13 +27,11 @@ const HomePage: React.FC = () => {
     try {
       setLoading(true);
       
-      // Get total beers count
       const { count: beersCount } = await supabase
         .from('beers')
         .select('*', { count: 'exact', head: true })
         .eq('user_id', user!.id);
 
-      // Get this month's consumption
       const now = new Date();
       const monthStart = startOfMonth(now);
       const monthEnd = endOfMonth(now);
@@ -47,7 +45,6 @@ const HomePage: React.FC = () => {
 
       const thisMonthTotal = monthlyData?.reduce((sum, record) => sum + record.quantity, 0) || 0;
 
-      // Get total consumption
       const { data: totalData } = await supabase
         .from('consumption_records')
         .select('quantity')
@@ -55,7 +52,6 @@ const HomePage: React.FC = () => {
 
       const totalConsumption = totalData?.reduce((sum, record) => sum + record.quantity, 0) || 0;
 
-      // Calculate average daily (this month)
       const daysInMonth = now.getDate();
       const averageDaily = thisMonthTotal / daysInMonth;
 
@@ -78,21 +74,21 @@ const HomePage: React.FC = () => {
       title: '맥주 관리',
       description: '맥주 종류 추가 및 편집',
       action: () => navigate('/beers'),
-      color: 'from-amber-500 to-yellow-500'
+      color: 'from-primary to-secondary'
     },
     {
       icon: Calendar,
       title: '소비 기록',
       description: '오늘 마신 맥주 기록',
       action: () => navigate('/record'),
-      color: 'from-blue-500 to-cyan-500'
+      color: 'from-secondary to-accent'
     },
     {
       icon: BarChart3,
       title: '통계 보기',
       description: '월별 소비 패턴 분석',
       action: () => navigate('/stats'),
-      color: 'from-green-500 to-emerald-500'
+      color: 'from-accent to-primary'
     }
   ];
 
@@ -122,58 +118,13 @@ const HomePage: React.FC = () => {
         </p>
       </div>
 
-      {/* Stats Cards */}
       <div className="grid grid-cols-2 gap-4">
-        <div className="bg-white rounded-xl p-4 shadow-md">
-          <div className="flex items-center space-x-3">
-            <div className="p-2 bg-amber-100 rounded-lg">
-              <Beer className="w-5 h-5 text-amber-600" />
-            </div>
-            <div>
-              <p className="text-sm text-gray-600">등록된 맥주</p>
-              <p className="text-xl font-bold text-gray-900">{stats.totalBeers}개</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-xl p-4 shadow-md">
-          <div className="flex items-center space-x-3">
-            <div className="p-2 bg-blue-100 rounded-lg">
-              <Calendar className="w-5 h-5 text-blue-600" />
-            </div>
-            <div>
-              <p className="text-sm text-gray-600">이번 달</p>
-              <p className="text-xl font-bold text-gray-900">{stats.thisMonthConsumption}잔</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-xl p-4 shadow-md">
-          <div className="flex items-center space-x-3">
-            <div className="p-2 bg-green-100 rounded-lg">
-              <TrendingUp className="w-5 h-5 text-green-600" />
-            </div>
-            <div>
-              <p className="text-sm text-gray-600">전체 누적</p>
-              <p className="text-xl font-bold text-gray-900">{stats.totalConsumption}잔</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-xl p-4 shadow-md">
-          <div className="flex items-center space-x-3">
-            <div className="p-2 bg-purple-100 rounded-lg">
-              <BarChart3 className="w-5 h-5 text-purple-600" />
-            </div>
-            <div>
-              <p className="text-sm text-gray-600">일평균</p>
-              <p className="text-xl font-bold text-gray-900">{stats.averageDaily}잔</p>
-            </div>
-          </div>
-        </div>
+        <StatCard icon={Beer} label="등록된 맥주" value={`${stats.totalBeers}개`} color="bg-primary" />
+        <StatCard icon={Calendar} label="이번 달" value={`${stats.thisMonthConsumption}잔`} color="bg-secondary" />
+        <StatCard icon={TrendingUp} label="전체 누적" value={`${stats.totalConsumption}잔`} color="bg-accent" />
+        <StatCard icon={BarChart3} label="일평균" value={`${stats.averageDaily}잔`} color="bg-blue-500" />
       </div>
 
-      {/* Quick Actions */}
       <div>
         <h3 className="text-lg font-semibold text-gray-900 mb-4">빠른 실행</h3>
         <div className="space-y-3">
@@ -199,5 +150,19 @@ const HomePage: React.FC = () => {
     </div>
   );
 };
+
+const StatCard = ({ icon: Icon, label, value, color }: { icon: React.ElementType, label: string, value: string, color: string }) => (
+  <div className="bg-white rounded-xl p-4 shadow-md">
+    <div className="flex items-center space-x-3">
+      <div className={`p-2 ${color} rounded-lg`}>
+        <Icon className="w-5 h-5 text-white" />
+      </div>
+      <div>
+        <p className="text-sm text-gray-600">{label}</p>
+        <p className="text-xl font-bold text-gray-900">{value}</p>
+      </div>
+    </div>
+  </div>
+);
 
 export default HomePage;
