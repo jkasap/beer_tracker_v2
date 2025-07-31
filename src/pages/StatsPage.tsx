@@ -146,7 +146,10 @@ const StatsPage: React.FC = () => {
             <li key={item.beer.id} className="flex items-center space-x-4">
               <span className="text-2xl font-bold w-8">{['🥇', '🥈', '🥉'][index]}</span>
               <div className="flex-1">
-                <p className="font-semibold text-gray-900">{item.beer.name}</p>
+                <p className="font-semibold text-gray-900">
+                  {item.beer.name}{' '}
+                  <span className="text-sm text-gray-500">({item.beer.type})</span>
+                </p>
                 <p className="text-sm text-gray-500">{item.quantity}잔 · {item.volume.toLocaleString()}ml</p>
               </div>
             </li>

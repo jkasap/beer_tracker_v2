@@ -284,7 +284,10 @@ const BeersPage: React.FC = () => {
                 </div>
                 
                 <div className="flex-1">
-                  <h3 className="font-semibold text-gray-900">{beer.name}</h3>
+                  <h3 className="font-semibold text-gray-900">
+                    {beer.name}{' '}
+                    <span className="text-sm text-gray-500">({beer.type})</span>
+                  </h3>
                   <p className="text-sm text-gray-600">
                     {beer.type} · {beer.volume}ml · {beer.alcohol_percentage}%
                   </p>
