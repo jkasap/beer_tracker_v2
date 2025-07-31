@@ -1,3 +1,5 @@
-feat: Increase consumption number size in calendar
+feat: Improve consumption display in calendar
 
-- Increased the font size of the daily consumption number in the calendar on the stats page from `text-xs` to `text-sm` to improve readability.
+- Centered the daily consumption number in the calendar on the stats page and increased the font size to `text-base` to improve readability.
+- Changed `self-end` to `self-center` to apply center alignment.
+- Modified the font size class from `text-sm` to `text-base`.

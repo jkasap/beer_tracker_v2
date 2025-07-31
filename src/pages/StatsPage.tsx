@@ -169,7 +169,7 @@ const StatsPage: React.FC = () => {
           return (
             <div key={date.toISOString()} className={`aspect-square p-1 rounded-lg text-sm flex flex-col justify-between ${isToday ? 'bg-primary-light/30 border-2 border-primary' : dayTotal > 0 ? 'bg-secondary-light/20' : 'hover:bg-gray-50'}`}>
               <span className={`${isToday ? 'font-bold text-primary-dark' : 'text-gray-900'}`}>{format(date, 'd')}</span>
-              {dayTotal > 0 && <span className="text-sm text-secondary-dark font-medium self-end">{dayTotal}</span>}
+              {dayTotal > 0 && <span className="text-base text-secondary-dark font-medium self-center">{dayTotal}</span>}
             </div>
           );
         })}
