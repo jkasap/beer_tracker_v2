@@ -1,0 +1,3 @@
+feat: Increase consumption number size in calendar
+
+- Increased the font size of the daily consumption number in the calendar on the stats page from `text-xs` to `text-sm` to improve readability.
