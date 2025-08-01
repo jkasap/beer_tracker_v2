@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Trophy, GlassWater, TrendingUp, CalendarDays, Percent, Sigma, Calendar as CalendarIcon } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
@@ -30,6 +31,7 @@ interface MonthlyStats {
 
 const StatsPage: React.FC = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [currentDate, setCurrentDate] = useState(new Date());
   const [records, setRecords] = useState<(ConsumptionRecord & { beer: Beer })[]>([]);
   const [yearlyRecords, setYearlyRecords] = useState<(ConsumptionRecord & { beer: Beer })[]>([]);
@@ -103,8 +105,7 @@ const StatsPage: React.FC = () => {
     }, {} as Record<string, { beer: Beer; quantity: number; volume: number }>);
 
     const beerRanking = Object.values(beerCounts)
-      .sort((a, b) => b.quantity - a.quantity)
-      .slice(0, 3);
+      .sort((a, b) => b.quantity - a.quantity);
 
     return { totalQuantity, totalVolume, totalAlcohol, drinkingDays, maxInDay, avgPerDay, beerRanking };
   };
@@ -122,6 +123,10 @@ const StatsPage: React.FC = () => {
 
   const navigateMonth = (direction: 'prev' | 'next') => setCurrentDate(prev => direction === 'prev' ? subMonths(prev, 1) : addMonths(prev, 1));
   const navigateYear = (direction: 'prev' | 'next') => setCurrentDate(prev => new Date(getYear(prev) + (direction === 'prev' ? -1 : 1), 0, 1));
+
+  const handleDateClick = (date: Date) => {
+    navigate(`/record?date=${format(date, 'yyyy-MM-dd')}`);
+  };
 
   const StatCard = ({ icon, value, label, color }: { icon: React.ElementType, value: string | number, label: string, color: string }) => (
     <div className="bg-white p-4 rounded-xl shadow-md flex items-center space-x-4">
@@ -144,7 +149,7 @@ const StatsPage: React.FC = () => {
         <ul className="space-y-4">
           {ranking.map((item, index) => (
             <li key={item.beer.id} className="flex items-center space-x-4">
-              <span className="text-2xl font-bold w-8">{['🥇', '🥈', '🥉'][index]}</span>
+              <span className="text-2xl font-bold w-8">{['🥇', '🥈', '🥉'][index] || '•'}</span>
               <div className="flex-1">
                 <p className="font-semibold text-gray-900">
                   {item.beer.name}{' '}
@@ -169,10 +174,20 @@ const StatsPage: React.FC = () => {
         {monthDays.map(date => {
           const dayTotal = records.filter(r => isSameDay(new Date(r.date), date)).reduce((sum, r) => sum + r.quantity, 0);
           const isToday = isSameDay(date, new Date());
+          const hasRecords = dayTotal > 0;
+
           return (
-            <div key={date.toISOString()} className={`aspect-square p-1 rounded-lg text-sm flex flex-col justify-between ${isToday ? 'bg-primary-light/30 border-2 border-primary' : dayTotal > 0 ? 'bg-secondary-light/20' : 'hover:bg-gray-50'}`}>
+            <div 
+              key={date.toISOString()} 
+              className={`aspect-square p-1 rounded-lg text-sm flex flex-col justify-between transition-all ${
+                isToday ? 'bg-primary-light/30 border-2 border-primary' : ''
+              } ${
+                hasRecords ? 'bg-secondary-light/20 cursor-pointer hover:bg-secondary-light/40' : 'hover:bg-gray-50'
+              }`}
+              onClick={() => hasRecords && handleDateClick(date)}
+            >
               <span className={`${isToday ? 'font-bold text-primary-dark' : 'text-gray-900'}`}>{format(date, 'd')}</span>
-              {dayTotal > 0 && <span className="text-base text-secondary-dark font-medium self-center">{dayTotal}</span>}
+              {hasRecords && <span className="text-base text-secondary-dark font-medium self-center">{dayTotal}</span>}
             </div>
           );
         })}

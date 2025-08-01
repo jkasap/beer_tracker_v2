@@ -1,13 +1,27 @@
 import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { CalendarDays, Save, Trash2 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { Beer, ConsumptionRecord } from '../types';
-import { format } from 'date-fns';
+import { format, isValid, parseISO } from 'date-fns';
 
 const RecordPage: React.FC = () => {
   const { user } = useAuth();
-  const [selectedDate, setSelectedDate] = useState(format(new Date(), 'yyyy-MM-dd'));
+  const [searchParams] = useSearchParams();
+  const dateFromUrl = searchParams.get('date');
+  
+  const getInitialDate = () => {
+    if (dateFromUrl) {
+      const parsedDate = parseISO(dateFromUrl);
+      if (isValid(parsedDate)) {
+        return format(parsedDate, 'yyyy-MM-dd');
+      }
+    }
+    return format(new Date(), 'yyyy-MM-dd');
+  };
+
+  const [selectedDate, setSelectedDate] = useState(getInitialDate());
   const [beers, setBeers] = useState<Beer[]>([]);
   const [records, setRecords] = useState<{ [key: string]: number }>({});
   const [existingRecords, setExistingRecords] = useState<ConsumptionRecord[]>([]);
