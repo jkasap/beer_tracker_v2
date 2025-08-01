@@ -179,12 +179,12 @@ const StatsPage: React.FC = () => {
           return (
             <div 
               key={date.toISOString()} 
-              className={`aspect-square p-1 rounded-lg text-sm flex flex-col justify-between transition-all ${
+              className={`aspect-square p-1 rounded-lg text-sm flex flex-col justify-between transition-all cursor-pointer ${
                 isToday ? 'bg-primary-light/30 border-2 border-primary' : ''
               } ${
-                hasRecords ? 'bg-secondary-light/20 cursor-pointer hover:bg-secondary-light/40' : 'hover:bg-gray-50'
+                hasRecords ? 'bg-secondary-light/20 hover:bg-secondary-light/40' : 'hover:bg-gray-100'
               }`}
-              onClick={() => hasRecords && handleDateClick(date)}
+              onClick={() => handleDateClick(date)}
             >
               <span className={`${isToday ? 'font-bold text-primary-dark' : 'text-gray-900'}`}>{format(date, 'd')}</span>
               {hasRecords && <span className="text-base text-secondary-dark font-medium self-center">{dayTotal}</span>}

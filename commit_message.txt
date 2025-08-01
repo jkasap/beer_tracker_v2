@@ -1,1 +1,1 @@
-feat: Add 'show more' button to record page
+feat: link to record page from all calendar dates
