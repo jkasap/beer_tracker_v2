@@ -13,6 +13,7 @@ const RecordPage: React.FC = () => {
   const [existingRecords, setExistingRecords] = useState<ConsumptionRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [showAll, setShowAll] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -168,7 +169,7 @@ const RecordPage: React.FC = () => {
       ) : (
         <>
           <div className="space-y-3">
-            {beers.map((beer) => (
+            {(showAll ? beers : beers.slice(0, 3)).map((beer) => (
               <div key={beer.id} className="bg-white rounded-xl p-4 shadow-md">
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
@@ -196,6 +197,15 @@ const RecordPage: React.FC = () => {
               </div>
             ))}
           </div>
+
+          {beers.length > 3 && !showAll && (
+            <button
+              onClick={() => setShowAll(true)}
+              className="w-full bg-gray-200 text-gray-700 py-3 px-4 rounded-xl font-semibold hover:bg-gray-300 focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 transition-all"
+            >
+              더보기
+            </button>
+          )}
 
           {getTotalQuantity() > 0 && (
             <div className="bg-primary-light/20 rounded-xl p-4 border border-primary-light">

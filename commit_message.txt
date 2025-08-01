@@ -1,1 +1,1 @@
-feat: Add beer type selection
+feat: Add 'show more' button to record page
